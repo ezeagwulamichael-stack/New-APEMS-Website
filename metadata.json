@@ -1,0 +1,6 @@
+{
+  "name": "APEMS Event Management Solution",
+  "description": "Africa Prudential Event Management Solution (APEMS) - a robust enterprise event management suite meticulously engineered to support physical, virtual, and hybrid corporate assemblies.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

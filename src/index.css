@@ -1,0 +1,68 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Space Grotesk", sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+  
+  --color-brand-red: #E11D48;
+  --color-brand-dark: #0F172A;
+  --color-brand-light: #F8FAFC;
+}
+
+/* Base resets & custom animations */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: #FFFFFF;
+  color: #1E293B;
+  overflow-x: hidden;
+}
+
+/* Custom scrollbar for better appearance */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #F1F5F9;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #CBD5E1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94A3B8;
+}
+
+/* Custom glow effect for APEMS footer branding */
+.footer-text-glow {
+  text-shadow: 0 0 40px rgba(225, 29, 72, 0.4), 0 0 80px rgba(225, 29, 72, 0.2);
+}
+
+/* Smooth fade-in and scale effects */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.4s ease-out forwards;
+}
+
+/* Accent line drawing animation */
+@keyframes drawLine {
+  from { width: 0; }
+  to { width: 100%; }
+}
+
+.animate-draw-line {
+  animation: drawLine 0.6s ease-out forwards;
+}
