@@ -7,6 +7,19 @@ import { useState } from "react";
 import { ChevronLeft, ChevronRight, CheckCircle2 } from "lucide-react";
 import { sectors } from "../data";
 
+// Import custom generated high-quality images for each sector
+import sectorCorporate from "../assets/images/sector_corporate_agm_1784502265595.jpg";
+import sectorSecurity from "../assets/images/sector_security_noc_1784502278481.jpg";
+import sectorFinance from "../assets/images/sector_finance_boardroom_1784502290896.jpg";
+import sectorPublic from "../assets/images/sector_public_assembly_1784502301733.jpg";
+import sectorAssociations from "../assets/images/sector_associations_hall_1784502316929.jpg";
+import sectorCooperatives from "../assets/images/sector_cooperatives_meeting_1784502329248.jpg";
+import sectorElections from "../assets/images/sector_elections_observers_1784502340261.jpg";
+import sectorEntertainment from "../assets/images/sector_entertainment_awards_1784502352158.jpg";
+import sectorEducation from "../assets/images/sector_education_guild_1784502367761.jpg";
+import sectorHealth from "../assets/images/sector_health_boardroom_1784502378502.jpg";
+import sectorNonprofit from "../assets/images/sector_nonprofit_ngo_1784502389041.jpg";
+
 interface SectorsSectionProps {
   onRequestDemo: () => void;
   onSpeakExpert: () => void;
@@ -28,29 +41,58 @@ export default function SectorsSection({ onRequestDemo, onSpeakExpert }: Sectors
   const getSectorImage = (theme: string) => {
     switch (theme) {
       case "corporate":
-        return "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&q=80&w=800";
+        return sectorCorporate;
       case "security":
-        return "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&q=80&w=800";
+        return sectorSecurity;
       case "finance":
-        return "https://images.unsplash.com/photo-1559526324-4b87b5e36e44?auto=format&fit=crop&q=80&w=800";
+        return sectorFinance;
       case "public":
-        return "https://images.unsplash.com/photo-1541872703-74c5e44368f9?auto=format&fit=crop&q=80&w=800";
+        return sectorPublic;
       case "associations":
-        return "https://images.unsplash.com/photo-1511556532299-8f662fc26c06?auto=format&fit=crop&q=80&w=800";
+        return sectorAssociations;
       case "cooperatives":
-        return "https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&q=80&w=800";
+        return sectorCooperatives;
       case "elections":
-        return "https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&q=80&w=800";
+        return sectorElections;
       case "entertainment":
-        return "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&q=80&w=800";
+        return sectorEntertainment;
       case "education":
-        return "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&q=80&w=800";
+        return sectorEducation;
       case "health":
-        return "https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?auto=format&fit=crop&q=80&w=800";
+        return sectorHealth;
       case "nonprofit":
-        return "https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&q=80&w=800";
+        return sectorNonprofit;
       default:
-        return "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&q=80&w=800";
+        return sectorCorporate;
+    }
+  };
+
+  const getSectorImageAlt = (theme: string) => {
+    switch (theme) {
+      case "corporate":
+        return "A professional photograph of diverse African corporate executives and shareholders attending a formal Annual General Meeting (AGM) in a modern bright boardroom.";
+      case "security":
+        return "A high-quality photograph of cybersecurity professionals in a high-tech modern network operations center with glowing screens showing charts and maps.";
+      case "finance":
+        return "A professional photograph of African finance professionals and investment bankers in a modern financial office boardroom discussing analytics.";
+      case "public":
+        return "A professional photograph of African public sector officials and government representatives seated in a formal legislative assembly hall.";
+      case "associations":
+        return "A professional photograph of members of a professional African medical or legal association attending a modern conference hall.";
+      case "cooperatives":
+        return "A beautiful professional photograph of a cooperative committee meeting with diverse African farmers and representatives seated together.";
+      case "elections":
+        return "A high-quality professional photograph of independent African electoral observers and officials monitoring a secure voting station.";
+      case "entertainment":
+        return "A high-quality, vibrant photograph of a modern African entertainment awards ceremony or live television gala with elegant attendees.";
+      case "education":
+        return "A professional photograph of an African university governing council or student union board meeting in a modern academic hall.";
+      case "health":
+        return "A professional photograph of healthcare board members and medical researchers in a clean, modern hospital boardroom.";
+      case "nonprofit":
+        return "A professional photograph of African and international NGO representatives holding a meeting in a bright workspace to collaborate on development.";
+      default:
+        return "A professional corporate photograph illustrating the organizational sector.";
     }
   };
 
@@ -120,7 +162,7 @@ export default function SectorsSection({ onRequestDemo, onSpeakExpert }: Sectors
           <div className="md:col-span-5 h-[200px] sm:h-[280px] md:h-auto relative overflow-hidden">
             <img
               src={getSectorImage(activeSector.imageTheme)}
-              alt={activeSector.title}
+              alt={getSectorImageAlt(activeSector.imageTheme)}
               className="w-full h-full object-cover transition-transform duration-700 hover:scale-102"
               referrerPolicy="no-referrer"
             />

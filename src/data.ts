@@ -5,6 +5,11 @@
 
 import { Service, Testimonial, FAQItem, Sector, MetricItem, WhyChooseCard, ParticipationMode, ProcessStep } from "./types";
 
+import electronicVotingPhone from "./assets/images/electronic_voting_phone_1784501726743.jpg";
+import boardroomProxyMeeting from "./assets/images/boardroom_proxy_meeting_1784501739000.jpg";
+import votingKeypadDelegate from "./assets/images/voting_keypad_delegate_1784501752863.jpg";
+import audienceTabletUser from "./assets/images/audience_tablet_user_1784501763128.jpg";
+
 export const metrics: MetricItem[] = [
   { value: "100+", label: "EVENTS MANAGED" },
   { value: "50k+", label: "PARTICIPANTS SERVED" },
@@ -219,28 +224,28 @@ export const participationModes: ParticipationMode[] = [
     title: "Electronic Voting",
     description: "Participants can securely log in, register, vote on agendas, and pose formal questions during live meetings.",
     iconName: "smartphone",
-    imageBg: "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?auto=format&fit=crop&q=80&w=600"
+    imageBg: electronicVotingPhone
   },
   {
     id: "mode-2",
     title: "Proxy Voting",
     description: "Submit verified proxy forms and shareholdings ahead of time, fully integrated with live plenary statistics.",
     iconName: "mail",
-    imageBg: "https://images.unsplash.com/photo-1450133064473-71024230f91b?auto=format&fit=crop&q=80&w=600"
+    imageBg: boardroomProxyMeeting
   },
   {
     id: "mode-3",
     title: "Voting Keypads",
     description: "Dedicated cryptographic keypad transceivers for physical delegates to record accurate in-room votes.",
     iconName: "dialpad",
-    imageBg: "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&q=80&w=600"
+    imageBg: votingKeypadDelegate
   },
   {
     id: "mode-4",
     title: "Hybrid Participation",
     description: "Unifies streaming web feeds, mobile applications, SMS/USSD codes, and smartcards in real-time.",
     iconName: "monitor",
-    imageBg: "https://images.unsplash.com/photo-1588196749597-9ff075ee6b5b?auto=format&fit=crop&q=80&w=600"
+    imageBg: audienceTabletUser
   }
 ];
 
