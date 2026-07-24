@@ -81,7 +81,7 @@ export default function Header({ onRequestDemo }: HeaderProps) {
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         isScrolled
           ? "bg-white/95 backdrop-blur-md shadow-sm border-b border-slate-100 py-3"
-          : "bg-white py-5"
+          : "bg-transparent py-5"
       }`}
     >
       <div className="max-w-7xl mx-auto px-6 md:px-8 flex items-center justify-between">
@@ -91,10 +91,14 @@ export default function Header({ onRequestDemo }: HeaderProps) {
             A
           </div>
           <div className="flex flex-col">
-            <span className="font-display font-bold text-xl tracking-tight leading-none text-slate-900">
+            <span className={`font-display font-bold text-xl tracking-tight leading-none transition-colors duration-300 ${
+              isScrolled ? "text-slate-900" : "text-white"
+            }`}>
               APEMS
             </span>
-            <span className="text-[7.5px] font-mono tracking-[0.2em] text-slate-500 uppercase leading-none mt-0.5 font-bold">
+            <span className={`text-[7.5px] font-mono tracking-[0.2em] uppercase leading-none mt-0.5 font-bold transition-colors duration-300 ${
+              isScrolled ? "text-slate-500" : "text-slate-300"
+            }`}>
               AFRICA PRUDENTIAL
             </span>
           </div>
@@ -109,13 +113,15 @@ export default function Header({ onRequestDemo }: HeaderProps) {
               onClick={(e) => handleNavClick(e, link.sectionId)}
               className={`text-xs font-display font-bold tracking-wider transition-colors duration-200 relative py-1.5 ${
                 activeSection === link.sectionId
-                  ? "text-red-600"
-                  : "text-slate-600 hover:text-slate-900"
+                  ? "text-red-500"
+                  : isScrolled
+                  ? "text-slate-600 hover:text-slate-900"
+                  : "text-slate-200 hover:text-white"
               }`}
             >
               {link.label}
               {activeSection === link.sectionId && (
-                <span className="absolute bottom-0 left-0 w-full h-[2px] bg-red-600 rounded-full animate-draw-line" />
+                <span className="absolute bottom-0 left-0 w-full h-[2px] bg-red-500 rounded-full animate-draw-line" />
               )}
             </a>
           ))}
@@ -126,7 +132,7 @@ export default function Header({ onRequestDemo }: HeaderProps) {
           <button
             id="header-cta"
             onClick={onRequestDemo}
-            className="px-5 py-2.5 text-xs font-display font-bold tracking-wider text-white bg-red-600 hover:bg-red-700 active:scale-95 transition-all duration-200 rounded-full shadow-sm hover:shadow-md outline-none focus:ring-2 focus:ring-red-500/40"
+            className="px-5 py-2.5 text-xs font-display font-bold tracking-wider text-white bg-red-600 hover:bg-red-700 active:scale-95 transition-all duration-200 rounded-full shadow-sm hover:shadow-md outline-none focus:ring-2 focus:ring-red-500/40 cursor-pointer"
           >
             REQUEST A DEMO
           </button>
@@ -136,7 +142,11 @@ export default function Header({ onRequestDemo }: HeaderProps) {
         <button
           id="mobile-menu-toggle"
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          className="flex md:hidden items-center justify-center p-1.5 text-slate-600 hover:text-slate-900 hover:bg-slate-50 rounded-lg transition-colors"
+          className={`flex md:hidden items-center justify-center p-1.5 rounded-lg transition-colors ${
+            isScrolled
+              ? "text-slate-600 hover:text-slate-900 hover:bg-slate-50"
+              : "text-white hover:text-white hover:bg-white/10"
+          }`}
           aria-label="Toggle navigation menu"
         >
           {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}

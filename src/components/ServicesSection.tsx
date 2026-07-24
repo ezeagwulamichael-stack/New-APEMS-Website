@@ -3,12 +3,99 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useState } from "react";
-import { Check, CheckCircle2, Search, Send, FileText, Vote, Layers, Users, TrendingUp, HelpCircle, HardDrive, RefreshCw } from "lucide-react";
+/**
+ * @license
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+import React, { useState, useEffect, useRef } from "react";
+import { Check, CheckCircle2, Search, Send, FileText, Vote, Layers, Users, TrendingUp, HelpCircle, HardDrive, RefreshCw, MousePointerClick } from "lucide-react";
+import { motion } from "motion/react";
 import { services } from "../data";
 
 export default function ServicesSection() {
   const [activeTab, setActiveTab] = useState("registration");
+
+  // State for Automated Capabilities Demo
+  const [reducedMotion, setReducedMotion] = useState(false);
+  const [isAutoPlaying, setIsAutoPlaying] = useState(true);
+  const [pointerLeft, setPointerLeft] = useState("8%");
+  const [clickPulseActive, setClickPulseActive] = useState(false);
+  const [highlightComponent, setHighlightComponent] = useState(false);
+
+  const autoLoopTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const userInactivityTimerRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Monitor prefers-reduced-motion user choice
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+    setReducedMotion(mediaQuery.matches);
+    const listener = (e: MediaQueryListEvent) => setReducedMotion(e.matches);
+    mediaQuery.addEventListener("change", listener);
+    return () => mediaQuery.removeEventListener("change", listener);
+  }, []);
+
+  // Automatic capabilities looping logic
+  useEffect(() => {
+    if (reducedMotion || !isAutoPlaying) {
+      if (autoLoopTimerRef.current) clearInterval(autoLoopTimerRef.current);
+      return;
+    }
+
+    const tabsList = ["registration", "voting", "proxy", "engagement", "reporting", "hybrid"];
+    const leftPositions: Record<string, string> = {
+      registration: "8%",
+      voting: "26%",
+      proxy: "45%",
+      engagement: "66%",
+      reporting: "82%",
+      hybrid: "94%"
+    };
+
+    autoLoopTimerRef.current = setInterval(() => {
+      setActiveTab((prevTab) => {
+        const currentIndex = tabsList.indexOf(prevTab);
+        const nextIndex = (currentIndex + 1) % tabsList.length;
+        const nextTab = tabsList[nextIndex];
+
+        // Animate virtual pointer to targeted tab
+        setPointerLeft(leftPositions[nextTab]);
+
+        // Trigger clicking feedback and visual card highlights
+        setTimeout(() => {
+          setClickPulseActive(true);
+          setHighlightComponent(true);
+        }, 1200);
+
+        setTimeout(() => {
+          setClickPulseActive(false);
+          setHighlightComponent(false);
+        }, 2200);
+
+        return nextTab;
+      });
+    }, 4500);
+
+    return () => {
+      if (autoLoopTimerRef.current) clearInterval(autoLoopTimerRef.current);
+    };
+  }, [reducedMotion, isAutoPlaying]);
+
+  // Pause guided tour when user interacts, and resume after 8s of inactivity
+  const triggerUserActivityPause = () => {
+    setIsAutoPlaying(false);
+    if (autoLoopTimerRef.current) clearInterval(autoLoopTimerRef.current);
+    if (userInactivityTimerRef.current) clearTimeout(userInactivityTimerRef.current);
+
+    userInactivityTimerRef.current = setTimeout(() => {
+      setIsAutoPlaying(true);
+    }, 8000);
+  };
+
+  const handleManualSelect = (tabId: string) => {
+    setActiveTab(tabId);
+    triggerUserActivityPause();
+  };
 
   // State for Registration & Accreditation Simulator
   const [attendees, setAttendees] = useState([
@@ -52,6 +139,7 @@ export default function ServicesSection() {
 
   // Handler for Accredit click
   const handleAccredit = (index: number) => {
+    triggerUserActivityPause();
     const updated = [...attendees];
     updated[index].status = "Accredited";
     setAttendees(updated);
@@ -59,6 +147,7 @@ export default function ServicesSection() {
 
   // Handler for Voting click
   const handleCastVote = (option: "yes" | "no" | "abstain") => {
+    triggerUserActivityPause();
     if (userVoted) return; // limit to one vote
     setUserVoted(option);
     setVotesCount((prev) => ({
@@ -69,6 +158,7 @@ export default function ServicesSection() {
 
   // Handler for Proxy validation
   const handleValidateProxy = (index: number) => {
+    triggerUserActivityPause();
     const updated = [...proxies];
     updated[index].status = "Accredited";
     setProxies(updated);
@@ -77,6 +167,7 @@ export default function ServicesSection() {
   // Handler for sending a live comment
   const handleSendComment = (e: React.FormEvent) => {
     e.preventDefault();
+    triggerUserActivityPause();
     if (!newComment.trim()) return;
     setComments((prev) => [...prev, { user: "You", comment: newComment }]);
     setNewComment("");
@@ -84,6 +175,7 @@ export default function ServicesSection() {
 
   // Handler for compiling statutory report
   const handleCompileReport = () => {
+    triggerUserActivityPause();
     setIsCompiling(true);
     setCompileSuccess(false);
     setTimeout(() => {
@@ -94,6 +186,7 @@ export default function ServicesSection() {
 
   // Handler for pinging hardware transceivers
   const handlePingHardware = () => {
+    triggerUserActivityPause();
     setPinging(true);
     setPingStatus("Scanning...");
     setTimeout(() => {
@@ -129,24 +222,52 @@ export default function ServicesSection() {
         </div>
 
         {/* Tab Selector Strip - Horizontal Scrollable on mobile */}
-        <div className="flex overflow-x-auto pb-4 mb-12 scrollbar-none gap-2 border-b border-slate-100">
-          <div className="flex space-x-2 mx-auto px-4 md:px-0">
-            {services.map((service) => {
-              const isActive = service.id === activeTab;
-              return (
-                <button
-                  key={service.id}
-                  onClick={() => setActiveTab(service.id)}
-                  className={`px-4.5 py-3 rounded-full text-xs font-display font-bold tracking-wider whitespace-nowrap transition-all duration-200 uppercase outline-none ${
-                    isActive
-                      ? "bg-red-600 text-white shadow-md shadow-red-600/10"
-                      : "bg-slate-50 hover:bg-slate-100 text-slate-600 hover:text-slate-900 border border-slate-200/40"
-                  }`}
+        <div className="relative border-b border-slate-100 pb-4 mb-12">
+          {/* Autoplay guided tour indicator badge */}
+          {!reducedMotion && (
+            <div className="absolute -top-7 right-4 flex items-center space-x-1.5 pointer-events-none">
+              <span className={`w-1.5 h-1.5 rounded-full ${isAutoPlaying ? "bg-red-600 animate-pulse" : "bg-slate-400"}`} />
+              <span className="text-[8px] font-mono font-bold text-slate-400 uppercase tracking-wider">
+                {isAutoPlaying ? "Guided Tour Active (Click any tab to pause)" : "Demo Paused (Resume on inactivity)"}
+              </span>
+            </div>
+          )}
+
+          <div className="flex overflow-x-auto scrollbar-none gap-2">
+            <div className="flex space-x-2 mx-auto px-4 md:px-0 relative">
+              {services.map((service) => {
+                const isActive = service.id === activeTab;
+                return (
+                  <button
+                    key={service.id}
+                    onClick={() => handleManualSelect(service.id)}
+                    className={`px-4.5 py-3 rounded-full text-xs font-display font-bold tracking-wider whitespace-nowrap transition-all duration-200 uppercase outline-none ${
+                      isActive
+                        ? "bg-red-600 text-white shadow-md shadow-red-600/10"
+                        : "bg-slate-50 hover:bg-slate-100 text-slate-600 hover:text-slate-900 border border-slate-200/40"
+                    }`}
+                  >
+                    {service.tabLabel}
+                  </button>
+                );
+              })}
+
+              {/* Guided Virtual Pointer Overlay */}
+              {!reducedMotion && isAutoPlaying && (
+                <div
+                  className="absolute pointer-events-none z-30 transition-all duration-1000 ease-in-out"
+                  style={{
+                    left: pointerLeft,
+                    top: "105%",
+                  }}
                 >
-                  {service.tabLabel}
-                </button>
-              );
-            })}
+                  <MousePointerClick className="w-4.5 h-4.5 text-red-600 filter drop-shadow animate-bounce" />
+                  {clickPulseActive && (
+                    <span className="absolute -ml-3.5 -mt-3.5 w-10 h-10 border-2 border-red-500 bg-red-500/20 rounded-full animate-ping" />
+                  )}
+                </div>
+              )}
+            </div>
           </div>
         </div>
 
@@ -261,7 +382,7 @@ export default function ServicesSection() {
                     <p className="text-[9px] font-mono tracking-wider text-slate-400 uppercase font-bold mb-2">
                       REGISTRY ATTENDEES (CLICK TO ACCREDIT):
                     </p>
-                    <div className="space-y-2">
+                    <div className={`space-y-2 transition-all duration-500 rounded-xl ${highlightComponent ? "ring-2 ring-red-500 p-1.5 shadow-lg bg-red-50/10" : ""}`}>
                       {attendees
                         .filter((a) => a.name.toLowerCase().includes(searchQuery.toLowerCase()))
                         .map((att, idx) => (
@@ -337,7 +458,7 @@ export default function ServicesSection() {
                     <p className="text-[9px] font-mono tracking-wider text-slate-400 uppercase font-bold mb-2">
                       LIVE BALLOT RESULTS & CAST BUTTONS:
                     </p>
-                    <div className="space-y-3">
+                    <div className={`space-y-3 transition-all duration-500 rounded-xl p-1.5 ${highlightComponent ? "ring-2 ring-red-500 shadow-lg bg-red-50/10" : ""}`}>
                       {/* Yes Resolution Bar */}
                       <div>
                         <div className="flex items-center justify-between text-xs mb-1 font-semibold">
@@ -430,7 +551,7 @@ export default function ServicesSection() {
                     <p className="text-[9px] font-mono tracking-wider text-slate-400 uppercase font-bold mb-2">
                       INCOMING PROXY CARD FILINGS:
                     </p>
-                    <div className="space-y-2">
+                    <div className={`space-y-2 transition-all duration-500 rounded-xl ${highlightComponent ? "ring-2 ring-red-500 p-1.5 shadow-lg bg-red-50/10" : ""}`}>
                       {proxies.map((prx, idx) => (
                         <div
                           key={idx}
@@ -473,7 +594,7 @@ export default function ServicesSection() {
                 <div className="space-y-4 flex-1 flex flex-col justify-between">
                   <div>
                     {/* Live stream view screen placeholder */}
-                    <div className="relative aspect-video bg-slate-900 rounded-xl overflow-hidden mb-3 border border-slate-800 shadow-inner flex items-center justify-center">
+                    <div className={`relative aspect-video bg-slate-900 rounded-xl overflow-hidden mb-3 border border-slate-800 shadow-inner flex items-center justify-center transition-all duration-500 ${highlightComponent ? "ring-2 ring-red-500 ring-offset-2 ring-offset-white" : ""}`}>
                       <div className="absolute inset-0 bg-cover bg-center opacity-40" style={{ backgroundImage: "url('https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&q=80&w=400')" }} />
                       
                       {/* Floating livestream overlay indicators */}
@@ -551,7 +672,7 @@ export default function ServicesSection() {
                     </p>
                     
                     {/* Pure CSS Visual Bar Chart */}
-                    <div className="bg-slate-50 border border-slate-100 rounded-xl p-4 space-y-2.5">
+                    <div className={`bg-slate-50 border border-slate-100 rounded-xl p-4 space-y-2.5 transition-all duration-500 ${highlightComponent ? "ring-2 ring-red-500 shadow-lg bg-red-50/10" : ""}`}>
                       {/* Bar 1 */}
                       <div>
                         <div className="flex justify-between text-[10px] text-slate-600 font-medium mb-1">
@@ -643,7 +764,7 @@ export default function ServicesSection() {
                     <p className="text-[9px] font-mono tracking-wider text-slate-400 uppercase font-bold mb-2">
                       HARDWARE GATEWAY STATUS:
                     </p>
-                    <div className="space-y-2 text-xs">
+                    <div className={`space-y-2 text-xs transition-all duration-500 rounded-xl ${highlightComponent ? "ring-2 ring-red-500 p-1.5 shadow-lg bg-red-50/10 animate-pulse" : ""}`}>
                       <div className="flex items-center justify-between p-2 rounded-lg bg-slate-50 border border-slate-100">
                         <span className="font-mono text-slate-500 font-semibold">Radio Transceiver Hub 1</span>
                         <span className="text-green-600 font-bold">● Connected (100% Signal)</span>
